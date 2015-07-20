@@ -1,20 +1,46 @@
 package me.jefferey.screenshotuploader.ui;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import javax.inject.Inject;
+
 import me.jefferey.screenshotuploader.R;
+import me.jefferey.screenshotuploader.ScreenshotUploaderApplication;
+import me.jefferey.screenshotuploader.imgur.Gallery;
+import me.jefferey.screenshotuploader.imgur.ImgurService;
+import me.jefferey.screenshotuploader.utils.PreferencesManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    ImgurService mImgurService;
+    @Inject
+    PreferencesManager mPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ScreenshotUploaderApplication.getMainComponent().inject(this);
         setContentView(R.layout.activity_main);
-        startActivity(new Intent(this, LoginActivity.class));
+        //startActivity(new Intent(this, LoginActivity.class));
+
+        mImgurService.getSubmissions(mPreferencesManager.getUsername(), 0, new Callback<Gallery>() {
+            @Override
+            public void success(Gallery gallery, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     @Override

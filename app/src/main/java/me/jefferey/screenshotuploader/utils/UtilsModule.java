@@ -2,8 +2,6 @@ package me.jefferey.screenshotuploader.utils;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -24,10 +22,5 @@ public class UtilsModule {
     @Provides @Singleton
     public PreferencesManager providePreferencesManager() {
         return new PreferencesManager(mContext);
-    }
-
-    @Provides @Singleton
-    public Gson provideGson() {
-        return new Gson();
     }
 }
