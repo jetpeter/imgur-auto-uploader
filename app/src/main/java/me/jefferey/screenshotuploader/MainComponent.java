@@ -3,7 +3,7 @@ package me.jefferey.screenshotuploader;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import me.jefferey.screenshotuploader.ui.LoginFragment;
+import me.jefferey.screenshotuploader.ui.fragments.LoginFragment;
 import me.jefferey.screenshotuploader.utils.UtilsModule;
 
 /**

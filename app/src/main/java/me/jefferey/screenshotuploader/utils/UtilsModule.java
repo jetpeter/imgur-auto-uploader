@@ -22,13 +22,12 @@ public class UtilsModule {
     }
 
     @Provides @Singleton
-    public PreferencesManager providePreferencesManager(Context context) {
-        return new PreferencesManager(context);
+    public PreferencesManager providePreferencesManager() {
+        return new PreferencesManager(mContext);
     }
 
     @Provides @Singleton
     public Gson provideGson() {
         return new Gson();
     }
-
 }
