@@ -1,4 +1,4 @@
-package me.jefferey.screenshotuploader.imgur;
+package me.jefferey.screenshotuploader.imgur.model;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package me.jefferey.screenshotuploader.imgur;
 
+import me.jefferey.screenshotuploader.imgur.model.Gallery;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;

@@ -24,6 +24,12 @@
             android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+
+        <service
+            android:name=".DataService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

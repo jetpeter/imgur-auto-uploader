@@ -1,4 +1,4 @@
-package me.jefferey.screenshotuploader.imgur;
+package me.jefferey.screenshotuploader.imgur.model;
 
 /**
  * Created by jetpeter on 6/12/15.

@@ -2,6 +2,7 @@ package me.jefferey.screenshotuploader.imgur;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
 
@@ -65,5 +66,10 @@ public class ImgurModule {
     @Provides @Singleton
     ImgurService provideImgurService(RestAdapter restAdapter) {
         return restAdapter.create(ImgurService.class);
+    }
+
+    @Provides @Singleton
+    RequestManager provideRequestManager(ImgurService imgurService, PreferencesManager preferencesManager, Bus bus) {
+        return new RequestManager(imgurService, preferencesManager, bus);
     }
 }
