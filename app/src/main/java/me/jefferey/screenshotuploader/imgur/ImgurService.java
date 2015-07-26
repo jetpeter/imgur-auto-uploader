@@ -12,7 +12,7 @@ import retrofit.http.Path;
  */
 public interface ImgurService {
 
-    @GET("/3/account/{username}/submissions/{page}.json")
+    @GET("/3/account/{username}/images/{page}.json")
     void getSubmissions(@Path("username") String username, @Path("page") int page, Callback<Gallery> gallery);
 
 }
