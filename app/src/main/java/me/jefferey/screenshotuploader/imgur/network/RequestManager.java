@@ -1,4 +1,4 @@
-package me.jefferey.screenshotuploader.imgur;
+package me.jefferey.screenshotuploader.imgur.network;
 
 import com.squareup.otto.Bus;
 

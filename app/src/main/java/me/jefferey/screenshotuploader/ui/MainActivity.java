@@ -1,6 +1,5 @@
 package me.jefferey.screenshotuploader.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,7 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.jefferey.screenshotuploader.R;
 import me.jefferey.screenshotuploader.ScreenshotUploaderApplication;
-import me.jefferey.screenshotuploader.imgur.RequestManager;
+import me.jefferey.screenshotuploader.imgur.network.RequestManager;
 import me.jefferey.screenshotuploader.imgur.response.ResponseGallery;
 import me.jefferey.screenshotuploader.utils.PreferencesManager;
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mBus.register(this);
-        startActivity(new Intent(this, LoginActivity.class));
+        //startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override

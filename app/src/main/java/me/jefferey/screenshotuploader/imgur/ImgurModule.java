@@ -14,6 +14,9 @@ import dagger.Module;
 import dagger.Provides;
 import io.realm.RealmObject;
 import me.jefferey.screenshotuploader.BuildConfig;
+import me.jefferey.screenshotuploader.imgur.network.ImgurService;
+import me.jefferey.screenshotuploader.imgur.network.ReAuthInterceptor;
+import me.jefferey.screenshotuploader.imgur.network.RequestManager;
 import me.jefferey.screenshotuploader.utils.PreferencesManager;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -50,7 +53,7 @@ public class ImgurModule {
             public void intercept(RequestFacade request) {
                 String authToken = preferencesManager.getAuthToken();
                 if (authToken != null) {
-                    request.addHeader("Authorization", "Bearer " + authToken);
+                    request.addHeader("Authorization", "Bearer X" + authToken);
                 } else {
                     request.addHeader("Authorization", "Client-ID" + BuildConfig.APPLICATION_ID);
                 }
@@ -59,15 +62,16 @@ public class ImgurModule {
     }
 
     @Provides @Singleton
-    OkHttpClient provideHttpClient() {
-        return new OkHttpClient();
-//        okHttpClient.interceptors().add(new Interceptor() {
-//            @Override
-//            public Response intercept(Chain chain) throws IOException {
-//                //http://stackoverflow.com/questions/22450036/refreshing-oauth-token-using-retrofit-without-modifying-all-calls/28285627#28285627
-//                return null;
-//            }
-//        });
+    ReAuthInterceptor provideReAuthInterceptor(PreferencesManager preferencesManager) {
+        return new ReAuthInterceptor(preferencesManager);
+    }
+
+
+    @Provides @Singleton
+    OkHttpClient provideHttpClient(ReAuthInterceptor reAuthInterceptor) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.interceptors().add(reAuthInterceptor);
+        return okHttpClient;
     }
 
     @Provides @Singleton
