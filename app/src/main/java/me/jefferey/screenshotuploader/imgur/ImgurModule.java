@@ -26,7 +26,7 @@ import retrofit.converter.GsonConverter;
 @Module
 public class ImgurModule {
 
-    private static final String API_URL = "https://api.imgur.com";
+    public static final String API_URL = "https://api.imgur.com";
 
     @Provides @Singleton
     Gson provideGson() {
@@ -53,7 +53,7 @@ public class ImgurModule {
             public void intercept(RequestFacade request) {
                 String authToken = preferencesManager.getAuthToken();
                 if (authToken != null) {
-                    request.addHeader("Authorization", "Bearer X" + authToken);
+                    request.addHeader("Authorization", "Bearer " + authToken);
                 } else {
                     request.addHeader("Authorization", "Client-ID" + BuildConfig.APPLICATION_ID);
                 }
@@ -62,8 +62,8 @@ public class ImgurModule {
     }
 
     @Provides @Singleton
-    ReAuthInterceptor provideReAuthInterceptor(PreferencesManager preferencesManager) {
-        return new ReAuthInterceptor(preferencesManager);
+    ReAuthInterceptor provideReAuthInterceptor(Gson gson, PreferencesManager preferencesManager) {
+        return new ReAuthInterceptor(gson, preferencesManager);
     }
 
 
