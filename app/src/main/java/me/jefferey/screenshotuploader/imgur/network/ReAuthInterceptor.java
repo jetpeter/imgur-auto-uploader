@@ -10,7 +10,6 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
-import me.jefferey.screenshotuploader.BuildConfig;
 import me.jefferey.screenshotuploader.imgur.ImgurModule;
 import me.jefferey.screenshotuploader.imgur.model.ReAuthPostBody;
 import me.jefferey.screenshotuploader.imgur.model.RefreshToken;
@@ -58,9 +57,7 @@ public class ReAuthInterceptor  implements Interceptor {
 
     private boolean refreshAuthToken() {
         ReAuthPostBody postData = new ReAuthPostBody();
-        postData.clientId = BuildConfig.CLIENT_ID;
         postData.refreshToken = mPreferencesManager.getRefreshToken();
-        postData.clientSecret = "2264b9dbb4017a873bd5222d22ced7e3f9120a9a";
         RequestBody body = RequestBody.create(JSON, mGson.toJson(postData));
         Request reAuthRequest = new Request.Builder()
                 .url(RE_AUTH_URL)
