@@ -34,15 +34,12 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     Bus mBus;
 
-    @Bind(R.id.get_images_button)
-    Button mGetImagesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ScreenshotUploaderApplication.getMainComponent().inject(this);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         mBus.register(this);
         //startActivity(new Intent(this, LoginActivity.class));
     }
@@ -66,11 +63,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @OnClick(R.id.get_images_button)
-    public void onGetImagesClick() {
-        mRequestManager.getUserSubmissions(TAG, 0);
     }
 
     @Subscribe

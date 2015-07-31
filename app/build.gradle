@@ -14,13 +14,14 @@ android {
         buildConfigField 'String', 'APP_URL', '"https://api.imgur.com"'
         buildConfigField 'String', 'CLIENT_ID', '"f983c85a7924b88"'
         buildConfigField 'String', 'AUTH_REDIRECT_URL', '"https://jefferey.me/screenshot_uploader"'
-        if(project.hasProperty("RELEASE_STORE_FILE")) {
-            buildConfigField 'String', 'IMGUR_API_SECRET', '"' +IMGUR_API_SECRET + '"'
+        if(project.hasProperty("IMGUR_API_SECRET")) {
+            buildConfigField 'String', 'IMGUR_API_SECRET', '"' + IMGUR_API_SECRET + '"'
         } else {
             buildConfigField 'String', 'IMGUR_API_SECRET', '""'
         }
 
     }
+
     buildTypes {
         release {
             minifyEnabled false
