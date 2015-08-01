@@ -25,22 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    @Inject
-    RequestManager mRequestManager;
-
-    @Inject
-    PreferencesManager mPreferencesManager;
-
-    @Inject
-    Bus mBus;
-
+    @Inject RequestManager mRequestManager;
+    @Inject PreferencesManager mPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ScreenshotUploaderApplication.getMainComponent().inject(this);
         setContentView(R.layout.activity_main);
-        mBus.register(this);
         //startActivity(new Intent(this, LoginActivity.class));
     }
 
@@ -64,14 +56,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Subscribe
-    public void onSubmissionsReceived(ResponseGallery responseGallery) {
-        if (responseGallery.getSuccess()) {
-            Toast.makeText(this, "Request Success", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Request Failed", Toast.LENGTH_LONG).show();
-        }
-    }
-
 }
