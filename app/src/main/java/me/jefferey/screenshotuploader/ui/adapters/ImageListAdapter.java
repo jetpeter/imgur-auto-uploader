@@ -15,7 +15,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.jefferey.screenshotuploader.R;
 import me.jefferey.screenshotuploader.imgur.model.Image;
-import me.jefferey.screenshotuploader.utils.ThumbnailUrlUtil;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ImageViewHolder> {
 
@@ -48,8 +47,9 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         Image image = mImages.get(position);
-        String imageUrl = ThumbnailUrlUtil.getThumbnailUrl(image, ThumbnailUrlUtil.BIG_SQUARE);
-        Picasso.with(holder.imageView.getContext()).load(imageUrl);
+        Picasso.with(holder.imageView.getContext())
+                .load(image.getLink())
+                .into(holder.imageView);
     }
 
     @Override

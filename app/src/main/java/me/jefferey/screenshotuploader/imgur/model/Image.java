@@ -1,6 +1,7 @@
 package me.jefferey.screenshotuploader.imgur.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by jetpeter on 6/12/15.
@@ -9,6 +10,7 @@ import io.realm.RealmObject;
  */
 public class Image extends RealmObject {
 
+    @PrimaryKey
     private String id;
     private String title;
     private String description;
