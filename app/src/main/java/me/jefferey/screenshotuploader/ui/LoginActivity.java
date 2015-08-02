@@ -18,6 +18,7 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.Lo
 
     @Override
     public void onLoginComplete(String token, String userId, String username, String refreshToken) {
+        setResult(RESULT_OK);
         finish();
     }
 }

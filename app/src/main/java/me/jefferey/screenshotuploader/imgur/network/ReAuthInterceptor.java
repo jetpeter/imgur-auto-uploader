@@ -67,14 +67,13 @@ public class ReAuthInterceptor  implements Interceptor {
             Response reAuthResponse = mOkHttpClient.newCall(reAuthRequest).execute();
             if (reAuthResponse.isSuccessful()) {
                 RefreshToken refreshToken = mGson.fromJson(reAuthResponse.body().string(), RefreshToken.class);
-                mPreferencesManager.setAuthToken(refreshToken.accessToken);
-                mPreferencesManager.setUsername(refreshToken.accountUsername);
-                mPreferencesManager.setRefreshToken(refreshToken.refreshToken);
+                mPreferencesManager.setLoggedIn(refreshToken.accessToken, refreshToken.refreshToken, refreshToken.accountUsername);
                 return true;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        mPreferencesManager.setLoggedOut();
         return false;
     }
 

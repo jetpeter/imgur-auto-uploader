@@ -96,9 +96,7 @@ public class LoginFragment extends Fragment {
         String userId = result.get(ACCOUNT_ID_KEY);
         String username = result.get(USERNAME_KEY);
         String refreshToken = result.get(REFRESH_TOKEN_KEY);
-        mPreferencesManager.setAuthToken(result.get(TOKEN_KEY));
-        mPreferencesManager.setRefreshToken(result.get(REFRESH_TOKEN_KEY));
-        mPreferencesManager.setUsername(result.get(USERNAME_KEY));
+        mPreferencesManager.setLoggedIn(token, refreshToken, username);
         if (mCallback != null) {
             mCallback.onLoginComplete(token, userId, username, refreshToken);
         }
@@ -110,7 +108,7 @@ public class LoginFragment extends Fragment {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             // {BuildConfig.AUTH_REDIRECT_URL}#access_token=ACCESS_TOKEN&token_type=Bearer&expires_in=3600
             if (url.startsWith(BuildConfig.AUTH_REDIRECT_URL)) {
-                if (url.contains("/?error=")) {
+                if (url.contains("?error=")) {
                     Log.v(TAG, "Error: " + url);
                 } else {
                     String parameters = url.split("#")[1];

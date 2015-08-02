@@ -1,5 +1,6 @@
 package me.jefferey.screenshotuploader.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -7,6 +8,7 @@ import android.view.MenuItem;
 
 import javax.inject.Inject;
 
+import me.jefferey.screenshotuploader.Constants;
 import me.jefferey.screenshotuploader.R;
 import me.jefferey.screenshotuploader.ScreenshotUploaderApplication;
 import me.jefferey.screenshotuploader.imgur.network.RequestManager;
@@ -24,7 +26,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ScreenshotUploaderApplication.getMainComponent().inject(this);
         setContentView(R.layout.activity_main);
-        //startActivity(new Intent(this, LoginActivity.class));
+        initStartActivities();
+    }
+
+    public void initStartActivities() {
+        if (!mPreferencesManager.isLoggedIn()) {
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            startActivityForResult(loginIntent, Constants.ACTIVITY_RESULT_LOGIN);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constants.ACTIVITY_RESULT_LOGIN:
+                onLoginActivityResult(resultCode);
+                break;
+        }
+    }
+
+    public void onLoginActivityResult(int resultCode) {
+        if (resultCode == RESULT_OK) {
+            mRequestManager.getUserSubmissions(TAG, 0);
+        } else {
+            // We do not support a logged out state so quit the app
+            finish();
+        }
     }
 
     @Override
