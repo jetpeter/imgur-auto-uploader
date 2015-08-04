@@ -55,7 +55,6 @@ public class ImageListFragment extends Fragment {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Image> images = realm.allObjects(Image.class);
         mImageListAdapter.setImages(images);
-        mImageListAdapter.notifyDataSetChanged();
     }
 
     @Override
