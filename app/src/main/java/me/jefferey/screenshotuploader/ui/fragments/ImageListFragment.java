@@ -47,7 +47,7 @@ public class ImageListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ScreenshotUploaderApplication.getMainComponent().inject(this);
         mBus.register(this);
-        //mRequestManager.getUserSubmissions(TAG, 0);
+        mRequestManager.getUserSubmissions(TAG, 0);
     }
 
     @Override

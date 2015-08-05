@@ -4,6 +4,7 @@ import com.squareup.otto.Bus;
 
 import io.realm.Realm;
 import me.jefferey.screenshotuploader.imgur.model.Gallery;
+import me.jefferey.screenshotuploader.imgur.model.Image;
 import me.jefferey.screenshotuploader.imgur.response.ResponseGallery;
 import me.jefferey.screenshotuploader.utils.PreferencesManager;
 import retrofit.Callback;
@@ -31,7 +32,7 @@ public class RequestManager {
             public void success(Gallery gallery, Response response) {
                 Realm realm = Realm.getDefaultInstance();
                 realm.beginTransaction();
-                realm.copyToRealm(gallery.data);
+                realm.copyToRealmOrUpdate(gallery.data);
                 realm.commitTransaction();
                 realm.close();
 
