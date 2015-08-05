@@ -6,7 +6,7 @@ package me.jefferey.screenshotuploader.imgur.model;
  * Response model for the imgurService image uplaod request
  */
 public class UploadResponse {
-    public String data;
+    public Image data;
     public int status;
     public boolean success;
 }

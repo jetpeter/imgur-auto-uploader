@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.jefferey.screenshotuploader.R;
@@ -29,6 +30,8 @@ import me.jefferey.screenshotuploader.ui.adapters.ImageListAdapter;
 public class ImageListFragment extends Fragment {
 
     public static final String TAG = "ImageListFragment";
+
+    private Callback mActivityCallback;
 
     @Inject Bus mBus;
     @Inject RequestManager mRequestManager;
@@ -50,6 +53,9 @@ public class ImageListFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        if (activity instanceof Callback) {
+            mActivityCallback = (Callback) activity;
+        }
         mLayoutManager = new LinearLayoutManager(activity);
         mImageListAdapter = new ImageListAdapter(LayoutInflater.from(activity));
         Realm realm = Realm.getDefaultInstance();
@@ -80,6 +86,17 @@ public class ImageListFragment extends Fragment {
             mImageListAdapter.notifyDataSetChanged();
         } else {
         }
+    }
+
+    @OnClick(R.id.ImageList_upload_image)
+    public void onUploadImageClick() {
+        if (mActivityCallback != null) {
+            mActivityCallback.onUploadImageClick();
+        }
+    }
+
+    public interface Callback {
+        void onUploadImageClick();
     }
 
 }

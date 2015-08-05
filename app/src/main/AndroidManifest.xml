@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".ScreenshotUploaderApplication"
@@ -24,12 +25,6 @@
             android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
-
-        <service
-            android:name=".DataService"
-            android:enabled="true"
-            android:exported="false" >
-        </service>
     </application>
 
 </manifest>

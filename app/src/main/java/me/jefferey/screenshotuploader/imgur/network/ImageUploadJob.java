@@ -1,6 +1,7 @@
 package me.jefferey.screenshotuploader.imgur.network;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.path.android.jobqueue.Job;
@@ -10,6 +11,7 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import me.jefferey.screenshotuploader.MainComponent;
 import me.jefferey.screenshotuploader.ScreenshotUploaderApplication;
 import me.jefferey.screenshotuploader.imgur.model.UploadResponse;
 import retrofit.mime.TypedFile;
@@ -24,14 +26,13 @@ public class ImageUploadJob extends Job {
     public static final String TAG = "ImageUploadJob";
     public static final int PRIORITY = 1;
 
-    public final Uri mImageUri;
+    public String mImageUriPath;
 
-    @Inject ImgurService mImgurService;
+    @Inject transient ImgurService mImgurService;
 
-    public ImageUploadJob(Uri imageUri) {
+    public ImageUploadJob(@NonNull String imagePath) {
         super(new Params(PRIORITY).requireNetwork().persist());
-        ScreenshotUploaderApplication.getMainComponent().inject(this);
-        mImageUri = imageUri;
+        mImageUriPath = imagePath;
     }
 
     @Override
@@ -41,9 +42,11 @@ public class ImageUploadJob extends Job {
 
     @Override
     public void onRun() throws Throwable {
-        File imageFile = new File(mImageUri.getPath());
+        File imageFile = new File(mImageUriPath);
         TypedFile typedFile = new TypedFile("image/jpg", imageFile);
-        UploadResponse response = mImgurService.uploadImage(typedFile);
+        MainComponent mainComponent = ScreenshotUploaderApplication.getMainComponent();
+        ImgurService imgurService = mainComponent.provideImgurService();
+        UploadResponse response = imgurService.uploadImage(typedFile);
         Log.v(TAG, "Upload Started Finished. Success: " + response.success);
     }
 
