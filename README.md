@@ -1,2 +1,3 @@
-# screenshot-uploader
-Application for automatically uploading screenshots to Imgur.
+# Imgur Auto Uploader
+
+Application for automatically uploading images to Imgur.
