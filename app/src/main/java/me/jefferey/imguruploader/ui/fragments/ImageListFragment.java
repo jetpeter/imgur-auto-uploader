@@ -24,7 +24,9 @@ import me.jefferey.imguruploader.UploaderApplication;
 import me.jefferey.imguruploader.imgur.model.Image;
 import me.jefferey.imguruploader.imgur.network.RequestManager;
 import me.jefferey.imguruploader.imgur.response.ResponseGallery;
+import me.jefferey.imguruploader.imgur.response.ResponseWrapper;
 import me.jefferey.imguruploader.ui.adapters.ImageListAdapter;
+import retrofit.client.Response;
 
 
 public class ImageListFragment extends Fragment {
@@ -85,6 +87,16 @@ public class ImageListFragment extends Fragment {
             mImageListAdapter.setImages(responseGallery.getData().data);
             mImageListAdapter.notifyDataSetChanged();
         } else {
+            handleNetworkError(responseGallery);
+        }
+    }
+
+    public void handleNetworkError(ResponseWrapper responseWrapper) {
+        Response response = responseWrapper.getResponse();
+        if (response.getStatus() == 401 || response.getStatus() == 403) {
+            if (mActivityCallback != null) {
+                mActivityCallback.authRequired();
+            }
         }
     }
 
@@ -97,6 +109,7 @@ public class ImageListFragment extends Fragment {
 
     public interface Callback {
         void onUploadImageClick();
+        void authRequired();
     }
 
 }

@@ -12,6 +12,7 @@ import retrofit.client.Response;
 
 /**
  * Created by jpetersen on 7/21/15.
+ * Handle Responses from the ImgurApi
  */
 public class RequestManager {
 

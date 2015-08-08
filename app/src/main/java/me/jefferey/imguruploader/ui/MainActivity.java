@@ -38,8 +38,7 @@ public class MainActivity extends AppCompatActivity implements ImageListFragment
 
     public void initStartActivities() {
         if (!mPreferencesManager.isLoggedIn()) {
-            Intent loginIntent = new Intent(this, LoginActivity.class);
-            startActivityForResult(loginIntent, Constants.ACTIVITY_RESULT_LOGIN);
+            authRequired();
         }
     }
 
@@ -96,5 +95,12 @@ public class MainActivity extends AppCompatActivity implements ImageListFragment
     public void onUploadImageClick() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, Constants.ACTIVITY_RESULT_GALLERY);
+    }
+
+    @Override
+    public void authRequired() {
+        mPreferencesManager.setLoggedOut();
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivityForResult(loginIntent, Constants.ACTIVITY_RESULT_LOGIN);
     }
 }
