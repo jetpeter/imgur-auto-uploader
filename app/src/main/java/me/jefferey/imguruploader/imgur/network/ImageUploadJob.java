@@ -1,5 +1,6 @@
 package me.jefferey.imguruploader.imgur.network;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import me.jefferey.imguruploader.MainComponent;
 import me.jefferey.imguruploader.UploaderApplication;
 import me.jefferey.imguruploader.imgur.model.UploadResponse;
+import me.jefferey.imguruploader.utils.FilePathResolver;
 import retrofit.mime.TypedFile;
 
 /**
@@ -29,9 +31,11 @@ public class ImageUploadJob extends Job {
 
     @Inject transient ImgurService mImgurService;
 
-    public ImageUploadJob(@NonNull String imagePath) {
+    public ImageUploadJob(@NonNull Uri imageUri) {
         super(new Params(PRIORITY).requireNetwork().persist());
-        mImageUriPath = imagePath;
+        MainComponent mainComponent = UploaderApplication.getMainComponent();
+        FilePathResolver filePathResolver = mainComponent.provideFilePathResolver();
+        mImageUriPath = filePathResolver.getImagePathFromURI(imageUri);
     }
 
     @Override

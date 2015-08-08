@@ -9,6 +9,7 @@ import me.jefferey.imguruploader.imgur.network.ImgurService;
 import me.jefferey.imguruploader.ui.MainActivity;
 import me.jefferey.imguruploader.ui.fragments.ImageListFragment;
 import me.jefferey.imguruploader.ui.fragments.LoginFragment;
+import me.jefferey.imguruploader.utils.FilePathResolver;
 import me.jefferey.imguruploader.utils.UtilsModule;
 
 @Singleton
@@ -21,4 +22,5 @@ public interface MainComponent {
     void inject(ImageUploadJob imageUploadJob);
 
     ImgurService provideImgurService();
+    FilePathResolver provideFilePathResolver();
 }

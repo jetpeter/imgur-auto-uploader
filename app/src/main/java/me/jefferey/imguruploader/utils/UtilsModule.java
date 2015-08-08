@@ -73,4 +73,9 @@ public class UtilsModule {
     public JobManager provideJobManager(Configuration configuration) {
         return new JobManager(mApplicationContext, configuration);
     }
+
+    @Provides
+    public FilePathResolver provideFilePathResolber() {
+        return new FilePathResolver(mApplicationContext.getContentResolver());
+    }
 }
