@@ -2,6 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="me.jefferey.screenshotuploader.ui.fragments.LoginFragment"
+    android:name="me.jefferey.imguruploader.ui.fragments.LoginFragment"
     android:id="@+id/LoginActivity_login_fragment"
     tools:layout="@layout/fragment_login" />

@@ -4,7 +4,7 @@
     tools:context=".MainActivity" >
 
     <fragment android:id="@+id/MainActivity_image_list_fragment"
-        android:name="me.jefferey.screenshotuploader.ui.fragments.ImageListFragment"
+        android:name="me.jefferey.imguruploader.ui.fragments.ImageListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_image_list" />
