@@ -1,6 +1,6 @@
 package me.jefferey.imguruploader;
 
-import android.provider.Contacts;
+import android.support.v4.content.LocalBroadcastManager;
 
 import javax.inject.Singleton;
 
@@ -27,4 +27,5 @@ public interface MainComponent {
 
     ImgurService provideImgurService();
     FilePathResolver provideFilePathResolver();
+    LocalBroadcastManager provideLocalBroadcastManager();
 }

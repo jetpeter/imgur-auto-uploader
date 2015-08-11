@@ -2,7 +2,12 @@ package me.jefferey.imguruploader.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import io.realm.RealmResults;
 import me.jefferey.imguruploader.R;
 import me.jefferey.imguruploader.UploaderApplication;
 import me.jefferey.imguruploader.imgur.model.Image;
+import me.jefferey.imguruploader.imgur.network.ImageUploadJob;
 import me.jefferey.imguruploader.imgur.network.RequestManager;
 import me.jefferey.imguruploader.imgur.response.ResponseGallery;
 import me.jefferey.imguruploader.imgur.response.ResponseWrapper;
@@ -39,6 +45,7 @@ public class ImageListFragment extends Fragment {
     @Inject Bus mBus;
     @Inject RequestManager mRequestManager;
     @Inject PreferencesManager mPreferencesManager;
+    @Inject LocalBroadcastManager mLocalBroadcastManager;
 
     @Bind(R.id.ImageList_recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.ImageList_upload_image) View mAddImageButton;
@@ -54,6 +61,8 @@ public class ImageListFragment extends Fragment {
         if (mPreferencesManager.isLoggedIn()) {
             mRequestManager.getUserSubmissions(TAG, 0);
         }
+        IntentFilter intentFilter = new IntentFilter(ImageUploadJob.NEW_IMAGE_BROADCAST);
+        mLocalBroadcastManager.registerReceiver(mNewImageBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -73,6 +82,7 @@ public class ImageListFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mBus.unregister(this);
+        mLocalBroadcastManager.unregisterReceiver(mNewImageBroadcastReceiver);
     }
 
     @Override
@@ -83,6 +93,12 @@ public class ImageListFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mImageListAdapter);
         return content;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Subscribe
@@ -97,9 +113,11 @@ public class ImageListFragment extends Fragment {
 
     public void handleNetworkError(ResponseWrapper responseWrapper) {
         Response response = responseWrapper.getResponse();
-        if (response.getStatus() == 401 || response.getStatus() == 403) {
-            if (mActivityCallback != null) {
-                mActivityCallback.authRequired();
+        if (response != null) {
+            if (response.getStatus() == 401 || response.getStatus() == 403) {
+                if (mActivityCallback != null) {
+                    mActivityCallback.authRequired();
+                }
             }
         }
     }
@@ -110,6 +128,15 @@ public class ImageListFragment extends Fragment {
             mActivityCallback.onUploadImageClick();
         }
     }
+
+    public BroadcastReceiver mNewImageBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Realm realm = Realm.getDefaultInstance();
+            RealmResults<Image> images = realm.allObjects(Image.class);
+            mImageListAdapter.setImages(images);
+        }
+    };
 
     public interface Callback {
         void onUploadImageClick();

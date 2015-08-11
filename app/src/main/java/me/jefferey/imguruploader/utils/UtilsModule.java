@@ -1,6 +1,7 @@
 package me.jefferey.imguruploader.utils;
 
 import android.content.Context;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.path.android.jobqueue.JobManager;
@@ -77,5 +78,10 @@ public class UtilsModule {
     @Provides
     public FilePathResolver provideFilePathResolber() {
         return new FilePathResolver(mApplicationContext.getContentResolver());
+    }
+
+    @Provides
+    public LocalBroadcastManager provideLocalBroadcastManager() {
+        return LocalBroadcastManager.getInstance(mApplicationContext);
     }
 }

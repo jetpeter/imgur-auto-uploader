@@ -1,18 +1,21 @@
 package me.jefferey.imguruploader.imgur.network;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 
 import java.io.File;
 
-import javax.inject.Inject;
-
+import io.realm.Realm;
 import me.jefferey.imguruploader.MainComponent;
 import me.jefferey.imguruploader.UploaderApplication;
+import me.jefferey.imguruploader.imgur.model.Image;
 import me.jefferey.imguruploader.imgur.model.UploadResponse;
 import me.jefferey.imguruploader.utils.FilePathResolver;
 import retrofit.mime.TypedFile;
@@ -25,15 +28,15 @@ import retrofit.mime.TypedFile;
 public class ImageUploadJob extends Job {
 
     public static final String TAG = "ImageUploadJob";
+    public static final String NEW_IMAGE_BROADCAST = "imageCreated";
+    public static final String IMAGE_ID = "imageId";
     public static final int PRIORITY = 1;
 
     public String mImageUriPath;
 
-    @Inject transient ImgurService mImgurService;
-
-    public ImageUploadJob(@NonNull String iamgePath) {
+    public ImageUploadJob(@NonNull String imagePath) {
         super(new Params(PRIORITY).requireNetwork().persist());
-        mImageUriPath = iamgePath;
+        mImageUriPath = imagePath;
     }
 
     public ImageUploadJob(@NonNull Uri imageUri) {
@@ -51,11 +54,28 @@ public class ImageUploadJob extends Job {
     @Override
     public void onRun() throws Throwable {
         File imageFile = new File(mImageUriPath);
-        TypedFile typedFile = new TypedFile("image/jpg", imageFile);
+        String mimeType = MimeTypeMap.getFileExtensionFromUrl(mImageUriPath);
+        TypedFile typedFile = new TypedFile("image/" + mimeType, imageFile);
         MainComponent mainComponent = UploaderApplication.getMainComponent();
         ImgurService imgurService = mainComponent.provideImgurService();
         UploadResponse response = imgurService.uploadImage(typedFile);
-        Log.v(TAG, "Upload Started Finished. Success: " + response.success);
+
+        if (response.success) {
+            saveImage(response.data);
+        }
+    }
+
+    private void saveImage(@NonNull Image image) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(image);
+        realm.commitTransaction();
+        realm.close();
+        Intent intent = new Intent(NEW_IMAGE_BROADCAST);
+        intent.putExtra(IMAGE_ID, image.getId());
+        MainComponent mainComponent = UploaderApplication.getMainComponent();
+        LocalBroadcastManager localBroadcastManager = mainComponent.provideLocalBroadcastManager();
+        localBroadcastManager.sendBroadcast(intent);
     }
 
     @Override
