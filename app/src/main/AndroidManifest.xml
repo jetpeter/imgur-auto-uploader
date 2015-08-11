@@ -25,6 +25,10 @@
             android:name="me.jefferey.imguruploader.ui.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+        <service
+            android:name="me.jefferey.imguruploader.service.PhotoSnooperService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

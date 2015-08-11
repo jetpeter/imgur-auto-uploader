@@ -8,6 +8,8 @@ import me.jefferey.imguruploader.ui.fragments.LoginFragment;
 
 /**
  * Created by jpetersen on 7/19/15.
+ *
+ * Activity that holds the login fragment to allow re-auth
  */
 public class LoginActivity extends AppCompatActivity implements LoginFragment.LoginFragmentInterface {
     @Override

@@ -15,6 +15,7 @@ import me.jefferey.imguruploader.R;
 import me.jefferey.imguruploader.UploaderApplication;
 import me.jefferey.imguruploader.imgur.network.ImageUploadJob;
 import me.jefferey.imguruploader.imgur.network.RequestManager;
+import me.jefferey.imguruploader.service.PhotoSnooperService;
 import me.jefferey.imguruploader.ui.fragments.ImageListFragment;
 import me.jefferey.imguruploader.utils.FilePathResolver;
 import me.jefferey.imguruploader.utils.PreferencesManager;
@@ -34,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements ImageListFragment
         UploaderApplication.getMainComponent().inject(this);
         setContentView(R.layout.activity_main);
         initStartActivities();
+
+
+        Intent intent = new Intent(this, PhotoSnooperService.class);
+        startService(intent);
+
+
     }
 
     public void initStartActivities() {

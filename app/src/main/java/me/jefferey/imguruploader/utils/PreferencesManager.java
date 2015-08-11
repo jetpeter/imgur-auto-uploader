@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 
 /**
  * Created by jpetersen on 7/19/15.
+ *
+ * Helper class for saving values to shared preferences
  */
 public class PreferencesManager {
 

@@ -31,6 +31,11 @@ public class ImageUploadJob extends Job {
 
     @Inject transient ImgurService mImgurService;
 
+    public ImageUploadJob(@NonNull String iamgePath) {
+        super(new Params(PRIORITY).requireNetwork().persist());
+        mImageUriPath = iamgePath;
+    }
+
     public ImageUploadJob(@NonNull Uri imageUri) {
         super(new Params(PRIORITY).requireNetwork().persist());
         MainComponent mainComponent = UploaderApplication.getMainComponent();

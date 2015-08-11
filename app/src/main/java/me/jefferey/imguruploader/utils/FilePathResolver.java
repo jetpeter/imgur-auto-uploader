@@ -7,6 +7,8 @@ import android.provider.MediaStore;
 
 /**
  * Created by jpetersen on 8/7/15.
+ *
+ * Converts URIs to full image path on the device.
  */
 public class FilePathResolver {
 

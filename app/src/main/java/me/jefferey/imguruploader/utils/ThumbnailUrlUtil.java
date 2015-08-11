@@ -4,6 +4,8 @@ import me.jefferey.imguruploader.imgur.model.Image;
 
 /**
  * Created by jpetersen on 7/26/15.
+ *
+ * Converts Imgur image id's to thumbnail URLs
  */
 public class ThumbnailUrlUtil {
 
