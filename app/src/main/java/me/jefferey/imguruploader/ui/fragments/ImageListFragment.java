@@ -26,6 +26,7 @@ import me.jefferey.imguruploader.imgur.network.RequestManager;
 import me.jefferey.imguruploader.imgur.response.ResponseGallery;
 import me.jefferey.imguruploader.imgur.response.ResponseWrapper;
 import me.jefferey.imguruploader.ui.adapters.ImageListAdapter;
+import me.jefferey.imguruploader.utils.PreferencesManager;
 import retrofit.client.Response;
 
 
@@ -37,6 +38,7 @@ public class ImageListFragment extends Fragment {
 
     @Inject Bus mBus;
     @Inject RequestManager mRequestManager;
+    @Inject PreferencesManager mPreferencesManager;
 
     @Bind(R.id.ImageList_recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.ImageList_upload_image) View mAddImageButton;
@@ -49,7 +51,9 @@ public class ImageListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UploaderApplication.getMainComponent().inject(this);
         mBus.register(this);
-        mRequestManager.getUserSubmissions(TAG, 0);
+        if (mPreferencesManager.isLoggedIn()) {
+            mRequestManager.getUserSubmissions(TAG, 0);
+        }
     }
 
     @Override
