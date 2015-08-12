@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -71,7 +72,7 @@ public class ImageListFragment extends Fragment {
         if (activity instanceof Callback) {
             mActivityCallback = (Callback) activity;
         }
-        mLayoutManager = new LinearLayoutManager(activity);
+        mLayoutManager = new GridLayoutManager(activity, 2);
         mImageListAdapter = new ImageListAdapter(LayoutInflater.from(activity));
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Image> images = realm.allObjects(Image.class);
@@ -104,8 +105,9 @@ public class ImageListFragment extends Fragment {
     @Subscribe
     public void onSubmissionsReceived(ResponseGallery responseGallery) {
         if (responseGallery.getSuccess()) {
-            mImageListAdapter.setImages(responseGallery.getData().data);
-            mImageListAdapter.notifyDataSetChanged();
+            Realm realm = Realm.getDefaultInstance();
+            RealmResults<Image> images = realm.allObjects(Image.class);
+            mImageListAdapter.setImages(images);
         } else {
             handleNetworkError(responseGallery);
         }
@@ -135,6 +137,7 @@ public class ImageListFragment extends Fragment {
             Realm realm = Realm.getDefaultInstance();
             RealmResults<Image> images = realm.allObjects(Image.class);
             mImageListAdapter.setImages(images);
+            mImageListAdapter.notifyDataSetChanged();
         }
     };
 
