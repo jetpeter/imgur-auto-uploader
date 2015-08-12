@@ -2,8 +2,6 @@ package me.jefferey.imguruploader;
 
 import android.app.Application;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import me.jefferey.imguruploader.utils.UtilsModule;
 
 /**
@@ -16,9 +14,6 @@ public class UploaderApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext()).build();
-        Realm.setDefaultConfiguration(config);
-
         sMainComponent = DaggerMainComponent.builder()
                 .utilsModule(new UtilsModule(getApplicationContext()))
                 .build();

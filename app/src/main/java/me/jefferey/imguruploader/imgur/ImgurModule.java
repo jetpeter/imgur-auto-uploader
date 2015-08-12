@@ -12,7 +12,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.realm.RealmObject;
 import me.jefferey.imguruploader.BuildConfig;
 import me.jefferey.imguruploader.imgur.network.ImgurService;
 import me.jefferey.imguruploader.imgur.network.ReAuthInterceptor;
@@ -31,17 +30,6 @@ public class ImgurModule {
     @Provides @Singleton
     Gson provideGson() {
         return new GsonBuilder()
-                .setExclusionStrategies(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes f) {
-                        return f.getDeclaringClass().equals(RealmObject.class);
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> clazz) {
-                        return false;
-                    }
-                })
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
     }

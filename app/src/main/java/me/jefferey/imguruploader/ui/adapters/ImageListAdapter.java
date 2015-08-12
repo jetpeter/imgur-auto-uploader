@@ -35,6 +35,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         mImages.addAll(images);
     }
 
+    public void addImage(int position, Image image) {
+        mImages.add(position, image);
+    }
+
     public void clear() {
         mImages.clear();
     }

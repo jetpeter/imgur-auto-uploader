@@ -2,14 +2,8 @@ package me.jefferey.imguruploader.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +12,16 @@ import android.view.ViewGroup;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
 import me.jefferey.imguruploader.R;
 import me.jefferey.imguruploader.UploaderApplication;
 import me.jefferey.imguruploader.imgur.model.Image;
-import me.jefferey.imguruploader.imgur.network.ImageUploadJob;
 import me.jefferey.imguruploader.imgur.network.RequestManager;
 import me.jefferey.imguruploader.imgur.response.ResponseGallery;
 import me.jefferey.imguruploader.imgur.response.ResponseWrapper;
@@ -46,7 +39,6 @@ public class ImageListFragment extends Fragment {
     @Inject Bus mBus;
     @Inject RequestManager mRequestManager;
     @Inject PreferencesManager mPreferencesManager;
-    @Inject LocalBroadcastManager mLocalBroadcastManager;
 
     @Bind(R.id.ImageList_recycler_view) RecyclerView mRecyclerView;
     @Bind(R.id.ImageList_upload_image) View mAddImageButton;
@@ -62,8 +54,6 @@ public class ImageListFragment extends Fragment {
         if (mPreferencesManager.isLoggedIn()) {
             mRequestManager.getUserSubmissions(TAG, 0);
         }
-        IntentFilter intentFilter = new IntentFilter(ImageUploadJob.NEW_IMAGE_BROADCAST);
-        mLocalBroadcastManager.registerReceiver(mNewImageBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -74,16 +64,12 @@ public class ImageListFragment extends Fragment {
         }
         mLayoutManager = new GridLayoutManager(activity, 2);
         mImageListAdapter = new ImageListAdapter(LayoutInflater.from(activity));
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<Image> images = realm.allObjects(Image.class);
-        mImageListAdapter.setImages(images);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mBus.unregister(this);
-        mLocalBroadcastManager.unregisterReceiver(mNewImageBroadcastReceiver);
     }
 
     @Override
@@ -105,12 +91,20 @@ public class ImageListFragment extends Fragment {
     @Subscribe
     public void onSubmissionsReceived(ResponseGallery responseGallery) {
         if (responseGallery.getSuccess()) {
-            Realm realm = Realm.getDefaultInstance();
-            RealmResults<Image> images = realm.allObjects(Image.class);
-            mImageListAdapter.setImages(images);
+            int beforeLength = mImageListAdapter.getItemCount();
+            List<Image> images = responseGallery.getData().data;
+            mImageListAdapter.addImages(images);
+            mImageListAdapter.notifyItemRangeInserted(beforeLength, images.size());
         } else {
             handleNetworkError(responseGallery);
         }
+    }
+
+    @Subscribe
+    public void onNewImage(Image image) {
+        // Add the image to the front of the list
+        mImageListAdapter.addImage(0, image);
+        mImageListAdapter.notifyItemInserted(0);
     }
 
     public void handleNetworkError(ResponseWrapper responseWrapper) {
@@ -130,16 +124,6 @@ public class ImageListFragment extends Fragment {
             mActivityCallback.onUploadImageClick();
         }
     }
-
-    public BroadcastReceiver mNewImageBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Realm realm = Realm.getDefaultInstance();
-            RealmResults<Image> images = realm.allObjects(Image.class);
-            mImageListAdapter.setImages(images);
-            mImageListAdapter.notifyDataSetChanged();
-        }
-    };
 
     public interface Callback {
         void onUploadImageClick();

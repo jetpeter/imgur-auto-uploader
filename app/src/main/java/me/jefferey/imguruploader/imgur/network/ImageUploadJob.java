@@ -1,18 +1,18 @@
 package me.jefferey.imguruploader.imgur.network;
 
-import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
+import com.squareup.otto.Bus;
 
 import java.io.File;
 
-import io.realm.Realm;
 import me.jefferey.imguruploader.MainComponent;
 import me.jefferey.imguruploader.UploaderApplication;
 import me.jefferey.imguruploader.imgur.model.Image;
@@ -28,11 +28,10 @@ import retrofit.mime.TypedFile;
 public class ImageUploadJob extends Job {
 
     public static final String TAG = "ImageUploadJob";
-    public static final String NEW_IMAGE_BROADCAST = "imageCreated";
-    public static final String IMAGE_ID = "imageId";
     public static final int PRIORITY = 1;
 
     public String mImageUriPath;
+
 
     public ImageUploadJob(@NonNull String imagePath) {
         super(new Params(PRIORITY).requireNetwork().persist());
@@ -59,23 +58,25 @@ public class ImageUploadJob extends Job {
         MainComponent mainComponent = UploaderApplication.getMainComponent();
         ImgurService imgurService = mainComponent.provideImgurService();
         UploadResponse response = imgurService.uploadImage(typedFile);
-
         if (response.success) {
-            saveImage(response.data);
+            postImage(response.data);
         }
     }
 
-    private void saveImage(@NonNull Image image) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(image);
-        realm.commitTransaction();
-        realm.close();
-        Intent intent = new Intent(NEW_IMAGE_BROADCAST);
-        intent.putExtra(IMAGE_ID, image.getId());
-        MainComponent mainComponent = UploaderApplication.getMainComponent();
-        LocalBroadcastManager localBroadcastManager = mainComponent.provideLocalBroadcastManager();
-        localBroadcastManager.sendBroadcast(intent);
+    /**
+     * Post the newly created images to the message bus
+     * @param image newly created Image instance
+     */
+    private void postImage(@NonNull final Image image) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                MainComponent mainComponent = UploaderApplication.getMainComponent();
+                Bus bus = mainComponent.provideBus();
+                bus.post(image);
+            }
+        });
     }
 
     @Override

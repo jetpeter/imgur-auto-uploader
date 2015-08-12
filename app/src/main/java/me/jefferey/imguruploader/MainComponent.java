@@ -2,6 +2,8 @@ package me.jefferey.imguruploader;
 
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.squareup.otto.Bus;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -27,5 +29,5 @@ public interface MainComponent {
 
     ImgurService provideImgurService();
     FilePathResolver provideFilePathResolver();
-    LocalBroadcastManager provideLocalBroadcastManager();
+    Bus provideBus();
 }

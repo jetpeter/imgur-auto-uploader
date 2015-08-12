@@ -8,6 +8,7 @@ import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
 import com.path.android.jobqueue.log.CustomLogger;
 import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 
 import javax.inject.Singleton;
 
@@ -35,7 +36,7 @@ public class UtilsModule {
 
     @Provides @Singleton
     public Bus provideBus() {
-        return new Bus();
+        return new Bus(ThreadEnforcer.MAIN);
     }
 
     @Provides @Singleton
@@ -78,10 +79,5 @@ public class UtilsModule {
     @Provides
     public FilePathResolver provideFilePathResolber() {
         return new FilePathResolver(mApplicationContext.getContentResolver());
-    }
-
-    @Provides
-    public LocalBroadcastManager provideLocalBroadcastManager() {
-        return LocalBroadcastManager.getInstance(mApplicationContext);
     }
 }
